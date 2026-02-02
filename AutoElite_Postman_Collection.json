@@ -1,0 +1,126 @@
+{
+    "info": {
+        "_postman_id": "autoelite-test-suite",
+        "name": "AutoElite Cloud Tests",
+        "description": "Colección de pruebas para verificar el despliegue en Render.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "1. Obtener Todos (Health Check)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "pm.test(\"Response time is less than 1000ms\", function () {",
+                            "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "https://autoelite-backend-v5sw.onrender.com/api/autos",
+                    "protocol": "https",
+                    "host": [
+                        "autoelite-backend-v5sw",
+                        "onrender",
+                        "com"
+                    ],
+                    "path": [
+                        "api",
+                        "autos"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "2. Crear Auto (POST)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 201 or 200\", function () {",
+                            "    pm.expect(pm.response.code).to.be.oneOf([201, 200]);",
+                            "});",
+                            "",
+                            "var jsonData = pm.response.json();",
+                            "pm.environment.set(\"auto_id\", jsonData.id);",
+                            "console.log(\"Auto creado con ID: \" + jsonData.id);"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\r\n    \"marca\": \"POSTMAN_TEST\",\r\n    \"modelo\": \"Test Unit\",\r\n    \"anio\": 2024,\r\n    \"precio\": 15000,\r\n    \"estado\": \"Disponible\",\r\n    \"imagenUrl\": \"https://via.placeholder.com/150\",\r\n    \"descripcion\": \"Auto generado desde Postman\"\r\n}"
+                },
+                "url": {
+                    "raw": "https://autoelite-backend-v5sw.onrender.com/api/autos",
+                    "protocol": "https",
+                    "host": [
+                        "autoelite-backend-v5sw",
+                        "onrender",
+                        "com"
+                    ],
+                    "path": [
+                        "api",
+                        "autos"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "3. Eliminar Auto (DELETE)",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 204 or 200\", function () {",
+                            "    pm.expect(pm.response.code).to.be.oneOf([204, 200]);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                    "raw": "https://autoelite-backend-v5sw.onrender.com/api/autos/{{auto_id}}",
+                    "protocol": "https",
+                    "host": [
+                        "autoelite-backend-v5sw",
+                        "onrender",
+                        "com"
+                    ],
+                    "path": [
+                        "api",
+                        "autos",
+                        "{{auto_id}}"
+                    ]
+                }
+            }
+        }
+    ]
+}
